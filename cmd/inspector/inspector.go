@@ -93,8 +93,17 @@ func Process(r *http.Request) {
 
 	for idx, v := range r.TLS.PeerCertificates {
 		log.Printf("request: found tls peer cert n=%d commonName=%s", idx, v.Subject.CommonName)
+
+		// Subject Common Name
 		if v.Subject.CommonName == "platform-tls-client.slack.com" {
 			log.Printf("request: found tls peer cert by Slack")
+		}
+
+		// Subject Alternative Name
+		for _, dnsName := range v.DNSNames {
+			if dnsName == "platform-tls-client.slack.com" {
+				log.Printf("request: found SAN with DNS Name by Slack")
+			}
 		}
 	}
 
